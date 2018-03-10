@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject ChacterModel;
+    public GameObject CharacterModel;
 
     void Start()
     {
         InitState();
         ChangeState(eState.IDLE);
+
     }
 
     // Update is called once per frame
     void Update()
     {
         CheckMouseLock();
-
+        UpdateInput();
         UpdateRotate();
         UpdateState();
      
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
     {
         IDLE,
         MOVE,
+        ATTACK,
     }
 
     Dictionary<eState, State> _stateDic = new Dictionary<eState, State>();
@@ -37,12 +39,15 @@ public class Player : MonoBehaviour
     {
         State idleState = new IdleState();
         State moveState = new MoveState();
+        State attackState = new AttackState();
 
         idleState.Init(this);
         moveState.Init(this);
-
+        attackState.Init(this);
         _stateDic.Add(eState.IDLE, idleState);
         _stateDic.Add(eState.MOVE, moveState);
+        _stateDic.Add(eState.ATTACK, attackState);
+
     }
 
     void UpdateState()
@@ -50,19 +55,19 @@ public class Player : MonoBehaviour
         _currentState.Update();
     }
     
-    public void StartIdleState()
-    {
-        ChacterModel.GetComponent<Animator>().SetTrigger("idle");
-
-    }
-    void ChangeState(eState nextState)
+    
+    public void ChangeState(eState nextState)
     {
         _currentState =_stateDic[nextState];
         _currentState.Start();
   
     }
+    /*
+    public void StartIdleState()
+    {
+        ChacterModel.GetComponent<Animator>().SetTrigger("idle");
 
-
+    }
     public void UpdateIdleState()
     {
         Vector3 inputVertical = new Vector3(0.0f, 0.0f, Input.GetAxis("Vertical"));
@@ -70,7 +75,6 @@ public class Player : MonoBehaviour
         if (0.0f != inputVertical.z || 0.0f != inputHorizontal.x)
         {
             ChangeState(eState.MOVE);
-            //StartMoveState();
         }
     }
     
@@ -114,11 +118,12 @@ public class Player : MonoBehaviour
         
     }
 
-  
+  */
 
 
     //Input
     bool _mouseLock = true;
+
 
     void CheckMouseLock()
     {
@@ -138,6 +143,78 @@ public class Player : MonoBehaviour
             Cursor.visible = true;
         }
     }
+    public enum eInputDirection
+    {
+        NONE,
+        FRONT,
+        BACK,
+        LEFT,
+        RIGHT,
+    }
+    eInputDirection _inputVerticalDirection = eInputDirection.NONE;
+    eInputDirection _inputHorizontalDirection = eInputDirection.NONE;
+    eInputDirection _inputAniDirection = eInputDirection.NONE;
+
+    public eInputDirection GetInputVerticalDirection()
+    {
+        return _inputVerticalDirection;
+    }
+
+    public eInputDirection GetInputHorizontalDirection()
+    {
+        return _inputHorizontalDirection;
+    }
+
+    public eInputDirection GetAniDirection()
+    {
+        return _inputAniDirection;
+    }
+
+
+    public void UpdateInput()
+    {
+        //_inputVerticalDirection = eInputDirection.NONE;
+        //_inputHorizontalDirection = eInputDirection.NONE;
+
+        _inputVerticalDirection = eInputDirection.NONE;
+        _inputHorizontalDirection = eInputDirection.NONE;
+        _inputAniDirection = eInputDirection.NONE;
+
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            _inputVerticalDirection = eInputDirection.FRONT;
+            _inputAniDirection = eInputDirection.FRONT;
+        }
+    
+        if (Input.GetKey(KeyCode.S))
+        {
+            _inputVerticalDirection = eInputDirection.BACK;
+            _inputAniDirection = eInputDirection.BACK;
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            _inputHorizontalDirection = eInputDirection.LEFT;
+            _inputAniDirection = eInputDirection.LEFT;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            _inputHorizontalDirection = eInputDirection.RIGHT;
+            _inputAniDirection = eInputDirection.RIGHT;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            ChangeState(eState.ATTACK);
+        }
+        if(Input.GetKeyUp(KeyCode.Space))
+        {
+            ChangeState(eState.IDLE);
+        }
+    }
+
 
     // Rotate
     float _rotationY = 0.0f;
@@ -155,41 +232,50 @@ public class Player : MonoBehaviour
     }
     // Move
 
-    void UpdateMove()
+    public void UpdateMove()
     {
         Vector3 addPosition = Vector3.zero;
 
-        Vector3 inputVertical = new Vector3(0.0f, 0.0f, Input.GetAxis("Vertical"));
-        if (0.0f < inputVertical.z)
+      
+        switch (_inputVerticalDirection)
         {
-            addPosition.z = MoveOffset(5.0f);
+            case eInputDirection.FRONT:
+                addPosition.z = MoveOffset(5.0f);
+                break;
+            case eInputDirection.BACK:
+                addPosition.z = MoveOffset(-3.0f);
+                break;
         }
-        else if (inputVertical.z < 0.0f)
+
+        switch (_inputHorizontalDirection)
         {
-            addPosition.z = MoveOffset(-3.0f);
-
+            case eInputDirection.RIGHT:
+                addPosition.x = MoveOffset(3.0f);
+                break;
+            case eInputDirection.LEFT:
+                addPosition.x = MoveOffset(-3.0f);
+                break;
         }
-        
-        Vector3 inputHorizontal = new Vector3(Input.GetAxis("Horizontal"), 0.0f, 0.0f);
-        if (0.0f < inputHorizontal.x)
-        {
-            addPosition.x = MoveOffset(3.0f);
 
-        }
-        else if (inputHorizontal.x < 0.0f)
-        {
-            addPosition.x = MoveOffset(-3.0f);
-
-        }
-        
-        transform.position += (transform.rotation *addPosition);
-
+        transform.position += (transform.rotation * addPosition);
     }
 
     float MoveOffset(float moveSpeed)
     {
         return (moveSpeed * Time.deltaTime);
-
     }
 
+    // Attack
+    float _shotSpeed = 0.5f;
+    public float GetShotSpeed()
+    {
+        return _shotSpeed;
+    }
+
+    // Animation
+    public AnimationModule GetAnimationModule()
+    {
+        return CharacterModel.GetComponent<AnimationModule>();
+    }
+   
 }

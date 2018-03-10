@@ -13,10 +13,12 @@ public class State
 
     virtual public void Start()
     {
+
     }
 
     virtual public void Update()
     {
     }
 
+    
 }

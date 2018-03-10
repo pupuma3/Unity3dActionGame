@@ -324,7 +324,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\01.Scripts\AnimationModule.cs" />
     <Compile Include="Assets\01.Scripts\Player.cs" />
+    <Compile Include="Assets\01.Scripts\State\AttackState.cs" />
     <Compile Include="Assets\01.Scripts\State\IdleState.cs" />
     <Compile Include="Assets\01.Scripts\State\MoveState.cs" />
     <Compile Include="Assets\01.Scripts\State\State.cs" />
