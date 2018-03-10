@@ -31,7 +31,7 @@ public class AttackState : State
     {
         base.Update();
         //_character.CharacterModel.transform.position = Vector3.zero;
-
+        _character.CharacterModel.transform.localPosition = Vector3.zero;
         UpdateShoot();
     }
 

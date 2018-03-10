@@ -19,7 +19,7 @@ public class IdleState : State
         {
             _character.ChangeState(Player.eState.MOVE);
         }
-        
+        //_character.CharacterModel.transform.localPosition = Vector3.zero;
         /*
         if (Player.eInputDirection.NONE == _character.GetInputVerticalDirection() ||
             Player.eInputDirection.NONE == _character.GetInputHorizontalDirection())

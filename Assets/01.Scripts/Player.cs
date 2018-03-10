@@ -205,11 +205,11 @@ public class Player : MonoBehaviour
             _inputAniDirection = eInputDirection.RIGHT;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space)|| Input.GetMouseButtonDown(0))
         {
             ChangeState(eState.ATTACK);
         }
-        if(Input.GetKeyUp(KeyCode.Space))
+        if(Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0))
         {
             ChangeState(eState.IDLE);
         }
