@@ -18,6 +18,7 @@ public class IdleState : State
         {
             _character.ChangeState(Player.eState.MOVE);
         }
+<<<<<<< HEAD:Assets/01.Scripts/Character/State/IdleState.cs
         _character.CharacterModel.transform.localPosition = Vector3.zero;
 
         if(Input.GetKeyDown(KeyCode.LeftShift))
@@ -26,6 +27,9 @@ public class IdleState : State
         }
        
 
+=======
+        //_character.CharacterModel.transform.localPosition = Vector3.zero;
+>>>>>>> 600a767d58655a58d08d8d813a7a20931cc8d733:Assets/01.Scripts/State/IdleState.cs
         /*
         if (Player.eInputDirection.NONE == _character.GetInputVerticalDirection() ||
             Player.eInputDirection.NONE == _character.GetInputHorizontalDirection())

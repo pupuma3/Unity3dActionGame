@@ -35,7 +35,11 @@ public class AttackState : State
     {
         base.Update();
         //_character.CharacterModel.transform.position = Vector3.zero;
+<<<<<<< HEAD:Assets/01.Scripts/Character/State/AttackState.cs
         //_character.CharacterModel.transform.localPosition = Vector3.zero;
+=======
+        _character.CharacterModel.transform.localPosition = Vector3.zero;
+>>>>>>> 600a767d58655a58d08d8d813a7a20931cc8d733:Assets/01.Scripts/State/AttackState.cs
         UpdateShoot();
     }
 
