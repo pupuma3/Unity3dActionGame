@@ -21,7 +21,7 @@ public class RunState : State
             if (Player.eInputDirection.NONE != _character.GetInputVerticalDirection() &&
            Player.eInputDirection.NONE != _character.GetInputHorizontalDirection())
             {
-                _character.ChangeState(Player.eState.RUN);
+                _character.ChangeState(Player.eState.MOVE);
                 return;
             }
             //_character.ChangeState(Player.eState.IDLE);
@@ -37,6 +37,9 @@ public class RunState : State
                 return;
             }
         }
+
+        
+
 
 
 

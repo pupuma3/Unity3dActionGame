@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Player : Character
 {
+
+    override protected void InitGroupIype()
+    {
+        _groupType = Character.eGroupType.PLAYER;
+        //
+    }
+   
     override protected void UpdateProcess()
     {
         CheckMouseLock();
@@ -15,6 +22,19 @@ public class Player : Character
     //Input
     bool _mouseLock = true;
 
+    // State
+    override protected void InitState()
+    {
+        base.InitState();
+
+        State idleState = new PlayerIdleState();
+        idleState.Init(this);
+        _stateDic[eState.IDLE] = idleState;
+
+        State attackState = new PlayerAttackState();
+        attackState.Init(this);
+        _stateDic[eState.ATTACK] = attackState;
+    }
 
     void CheckMouseLock()
     {
@@ -101,7 +121,12 @@ public class Player : Character
         _rotationY += (addRotationY * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0.0f, _rotationY, 0.0f);
     }
-  
 
-   
+    override protected void InitItem()
+    {
+        _gun = GunObject.AddComponent<NWayGunItem>();
+        _gun.SetBullet(BulletPrefab);
+        _gun.InitGroupType(_groupType);
+    }
+
 }

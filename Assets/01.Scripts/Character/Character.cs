@@ -8,14 +8,23 @@ public class Character : MonoBehaviour
 
     void Start()
     {
-        InitState();
-        InitItem();
-
-        ChangeState(eState.IDLE);
+        Init();
+      
     }
     void Update()
     {
         UpdateProcess();
+
+    }
+    public void Init()
+    {
+        InitGroupIype();
+        InitState();
+        InitItem();
+        ChangeState(eState.IDLE);
+    }
+    virtual protected void InitGroupIype()
+    {
 
     }
     // Update
@@ -45,29 +54,32 @@ public class Character : MonoBehaviour
         MOVE,
         RUN,
         ATTACK,
+        FIND_TARGET,
     }
 
-    Dictionary<eState, State> _stateDic = new Dictionary<eState, State>();
+    protected Dictionary<eState, State> _stateDic = new Dictionary<eState, State>();
 
     State _currentState;
 
-    protected void InitState()
+    virtual protected void InitState()
     {
         State idleState = new IdleState();
         State moveState = new MoveState();
         State attackState = new AttackState();
         State runState = new RunState();
+        State findTargetState = new FindTargetState();
 
         idleState.Init(this);
         moveState.Init(this);
         attackState.Init(this);
         runState.Init(this);
+        findTargetState.Init(this);
 
         _stateDic.Add(eState.IDLE, idleState);
         _stateDic.Add(eState.MOVE, moveState);
         _stateDic.Add(eState.RUN, runState);
         _stateDic.Add(eState.ATTACK, attackState);
-
+        _stateDic.Add(eState.FIND_TARGET, findTargetState);
     }
 
     protected void UpdateState()
@@ -208,12 +220,42 @@ public class Character : MonoBehaviour
 
     protected GunItem _gun;
 
-    void InitItem()
+    virtual protected void InitItem()
     {
-        //_gun = GunObject.GetComponent<GunItem>();
-        //_gun = GunObject.AddComponent<GunItem>();
-        _gun = GunObject.AddComponent<SprialGunItem>();
-        _gun.SetBullet(BulletPrefab);
+        //_gun = GunObject.AddComponent<ShotgunItem>();
+        //_gun.SetBullet(BulletPrefab);
+    }
+    //
+    protected Character _target = null;
+
+    virtual public void FindTarget()
+    {
+        //_target = null;
     }
 
+    public Character GetTarget()
+    {
+        return _target;
+    }
+
+    public void Look(Character target)
+    {
+        target = _target;
+        transform.LookAt(target.transform);
+    }
+
+    public enum eGroupType
+    {
+        PLAYER,
+        ENEMY,
+    }
+
+
+    // GroupType
+    protected eGroupType _groupType;
+
+    public eGroupType GetGroupType()
+    {
+        return _groupType;
+    }
 }

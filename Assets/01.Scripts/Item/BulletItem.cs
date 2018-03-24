@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class BulletItem : MonoBehaviour
 {
-    float _lifeTime = 3.0f;
-    float _moveSpeed = 20.0f;
+    
+
+    Character.eGroupType _ownerGroupType;
+
+
+    float _lifeTime = 20.0f;
+    float _moveSpeed = 1.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -22,8 +27,21 @@ public class BulletItem : MonoBehaviour
 
 	}
 
+
+    public void SetOwnerGroupType(Character.eGroupType ownerGroupType)
+    {
+        _ownerGroupType = ownerGroupType;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        GameObject.Destroy(gameObject);
+        Character ColliderCharacter = other.gameObject.GetComponent<Character>();
+        if(null != ColliderCharacter)
+        {
+            if(ColliderCharacter.GetGroupType() != _ownerGroupType)
+            {
+                GameObject.Destroy(gameObject);
+            }
+        }
     }
 }

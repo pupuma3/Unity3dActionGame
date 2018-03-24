@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AttackState : State
 {
+    float _attackTime = 10.0f;
+    float _attackDuration = 0.0f;
 
     bool _isShoot = false;
     Quaternion _characterRotation;
@@ -11,6 +13,11 @@ public class AttackState : State
     public override void Start()
     {
         //
+        _attackTime = Random.Range(18.0f, 20.0f);
+        _attackDuration = 0.0f;
+
+        // 총이나 총알을 바꾸어 준다.
+
         _characterRotation = _character.CharacterModel.transform.localRotation;
 
         _isShoot = false;
@@ -26,21 +33,33 @@ public class AttackState : State
             _isShoot = true;
             Debug.Log("_isShoot : " + _isShoot);
         });
+        
+
     }
     override public void Stop()
     {
         _character.CharacterModel.transform.localRotation = _characterRotation;
     }
+
+    
     public override void Update()
     {
         base.Update();
         //_character.CharacterModel.transform.position = Vector3.zero;
-<<<<<<< HEAD:Assets/01.Scripts/Character/State/AttackState.cs
-        //_character.CharacterModel.transform.localPosition = Vector3.zero;
-=======
+
         _character.CharacterModel.transform.localPosition = Vector3.zero;
->>>>>>> 600a767d58655a58d08d8d813a7a20931cc8d733:Assets/01.Scripts/State/AttackState.cs
-        UpdateShoot();
+
+        if(_attackTime <= _attackDuration)
+        {
+            _character.ChangeState(Character.eState.IDLE);
+        }
+        else
+        {
+            UpdateShoot();
+            _character.UpdateMove();
+        }
+        _attackDuration += Time.deltaTime;
+
     }
 
 

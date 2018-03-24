@@ -29,7 +29,6 @@ public class MoveState : State
         }
         
 
-
         UpdateAnimation();
         _character.UpdateMove();
 
