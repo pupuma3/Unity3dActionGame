@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 28120842}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterModel: {fileID: 1000800448}
   GunObject: {fileID: 1766493132}
-  BulletPrefab: {fileID: 1006929004851098, guid: 45fb30eb07fec644ca893b6bb88ebac9,
+  BulletPrefab: {fileID: 1006929004851098, guid: 9b1d3101ce747f24ba9bf05dcdbdf82e,
     type: 2}
 --- !u!1 &447551890
 GameObject:
@@ -2907,7 +2907,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterModel: {fileID: 1845043089}
   GunObject: {fileID: 1983087129}
-  BulletPrefab: {fileID: 1006929004851098, guid: 45fb30eb07fec644ca893b6bb88ebac9,
+  BulletPrefab: {fileID: 1006929004851098, guid: 9b1d3101ce747f24ba9bf05dcdbdf82e,
     type: 2}
 --- !u!136 &1166374460
 CapsuleCollider:
@@ -2933,7 +2933,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0

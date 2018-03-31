@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class BulletItem : MonoBehaviour
 {
-    
+    protected Character _target = null;
+    protected Character.eGroupType _ownerGroupType;
 
-    Character.eGroupType _ownerGroupType;
-
-
-    float _lifeTime = 20.0f;
-    float _moveSpeed = 1.0f;
-
+    protected float _lifeTime = 20.0f;
+    protected float _moveSpeed = 5.0f;
 	// Use this for initialization
 	void Start ()
     {
@@ -23,10 +20,8 @@ public class BulletItem : MonoBehaviour
     {
         Vector3 moveOffset = _moveSpeed * Vector3.forward;
         transform.position += ((transform.rotation * moveOffset) * Time.deltaTime);
-
-
-	}
-
+    }
+ 
 
     public void SetOwnerGroupType(Character.eGroupType ownerGroupType)
     {
@@ -43,5 +38,10 @@ public class BulletItem : MonoBehaviour
                 GameObject.Destroy(gameObject);
             }
         }
+    }
+
+    public void SetTarget(Character target)
+    {
+        _target = target;
     }
 }

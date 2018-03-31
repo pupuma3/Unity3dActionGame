@@ -98,13 +98,29 @@ public class Player : Character
         }
         */
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetMouseButtonDown(1))
         {
-            ChangeState(eState.ATTACK);
+            if(_isAir)
+            {
+                ChangeState(eState.LANDING);
+            }
+            else
+            {
+                _currentState.ChangeState(eState.TAKE_OFF);
+            }
         }
-        if(Input.GetKeyUp(KeyCode.Space))
+
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            ChangeState(eState.IDLE);
+            _target = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Character>();
+
+            _currentState.ChangeState(eState.ATTACK);
+            //ChangeState(eState.ATTACK);
+        }
+        if(Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0))
+        {
+            //ChangeState(eState.IDLE);
+            _currentState.ChangeState(eState.IDLE);
         }
     }
 
@@ -124,9 +140,10 @@ public class Player : Character
 
     override protected void InitItem()
     {
-        _gun = GunObject.AddComponent<NWayGunItem>();
+        //_gun = GunObject.AddComponent<NWayGunItem>();
+        _gun = GunObject.AddComponent<SprialGunItem>();
         _gun.SetBullet(BulletPrefab);
         _gun.InitGroupType(_groupType);
     }
-
+ 
 }

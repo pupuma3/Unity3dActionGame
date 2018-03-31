@@ -14,7 +14,24 @@ public class Enemy : Character
     {
         //_groupType = Character.eGroupType.ENEMY;
     }
+    protected override void UpdateProcess()
+    {
+        UpdateState();
+    }
 
+    protected override void InitState()
+    {
+        base.InitState();
+
+        State idleState = new EnemyIdleState();
+        State attackState = new EnemyAttackState();
+
+        idleState.Init(this);
+        attackState.Init(this);
+
+        _stateDic[eState.IDLE] = idleState;
+        _stateDic[eState.ATTACK] = attackState;
+    }
     override public void FindTarget()
     {
         _target = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
@@ -26,6 +43,11 @@ public class Enemy : Character
         _gun.SetBullet(BulletPrefab);
         _gun.InitGroupType(_groupType);
 
+    }
+
+    override public void UpdateAI()
+    {
+        _currentState.ChangeState(eState.ATTACK);
     }
 
 }

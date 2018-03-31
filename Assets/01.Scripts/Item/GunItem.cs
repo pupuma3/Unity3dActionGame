@@ -54,26 +54,27 @@ public class GunItem : MonoBehaviour
         
 
     }
-    virtual public void Fire(Quaternion startRotation)
+    virtual public void Fire(Quaternion startRotation, Character target)
     {
 
         if(null  != _bulletPrefab)
         {
             for(int i = 0; i < _gunModuleList.Count; i++)
             {
-                _gunModuleList[i].Fire(startRotation);
+                _gunModuleList[i].Fire(startRotation, target);
 
             }
             //CreateBullet(startRotation);
         }
     }
             
-    public void CreateBullet(Quaternion startRotation)
+    public void CreateBullet(Quaternion startRotation, Character target)
     {
         GameObject bulletObject = GameObject.Instantiate(_bulletPrefab, transform.position, startRotation);
         bulletObject.transform.localScale = Vector3.one;
 
         bulletObject.GetComponent<BulletItem>().SetOwnerGroupType(_ownerGroupType);
+        bulletObject.GetComponent<BulletItem>().SetTarget(target);
     }
 
 

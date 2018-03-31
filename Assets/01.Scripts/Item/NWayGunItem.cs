@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NWayGunItem : GunItem
 {
+    
     override protected void CreateGunModule()
     {
         {

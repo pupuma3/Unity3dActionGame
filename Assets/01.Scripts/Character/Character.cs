@@ -14,7 +14,6 @@ public class Character : MonoBehaviour
     void Update()
     {
         UpdateProcess();
-
     }
     public void Init()
     {
@@ -33,6 +32,7 @@ public class Character : MonoBehaviour
     {
         UpdateRotate();
         UpdateState();
+
     }
     // Rotate
     protected float _rotationY = 0.0f;
@@ -55,11 +55,13 @@ public class Character : MonoBehaviour
         RUN,
         ATTACK,
         FIND_TARGET,
+        TAKE_OFF,
+        LANDING,
     }
 
     protected Dictionary<eState, State> _stateDic = new Dictionary<eState, State>();
 
-    State _currentState;
+    protected State _currentState;
 
     virtual protected void InitState()
     {
@@ -68,18 +70,24 @@ public class Character : MonoBehaviour
         State attackState = new AttackState();
         State runState = new RunState();
         State findTargetState = new FindTargetState();
+        State takeOffState = new TakeOffState();
+        State landingState = new LandingState();
 
         idleState.Init(this);
         moveState.Init(this);
         attackState.Init(this);
         runState.Init(this);
         findTargetState.Init(this);
+        takeOffState.Init(this);
+        landingState.Init(this);
 
         _stateDic.Add(eState.IDLE, idleState);
         _stateDic.Add(eState.MOVE, moveState);
         _stateDic.Add(eState.RUN, runState);
         _stateDic.Add(eState.ATTACK, attackState);
         _stateDic.Add(eState.FIND_TARGET, findTargetState);
+        _stateDic.Add(eState.TAKE_OFF, takeOffState);
+        _stateDic.Add(eState.LANDING, landingState);
     }
 
     protected void UpdateState()
@@ -98,7 +106,22 @@ public class Character : MonoBehaviour
         _currentState.Start();
 
     }
+    virtual public void ArriveDestination()
+    {
+        ChangeState(Player.eState.IDLE);
+    }
 
+    protected Vector3 _targetPosition = Vector3.zero;
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
+
+    public Vector3 GetTargetPosition()
+    {
+        return _targetPosition;
+    }
     //Input
     public enum eInputDirection
     {
@@ -158,6 +181,45 @@ public class Character : MonoBehaviour
 
         transform.position += (transform.rotation * addPosition);
     }
+  
+    
+
+    // UpdateTakeOff
+    protected bool _isAir = false;
+
+    public void SetAir(bool isAir)
+    {
+        _isAir = isAir;
+    }
+
+    public void UpdateTakeOff()
+    {
+        Vector3 takeOffPos = transform.position;
+        takeOffPos.y = 3.0f;
+        float upSpeed = 3.0f;
+        transform.position = Vector3.Lerp(transform.position, takeOffPos, upSpeed * Time.deltaTime);
+        if(Vector3.Distance (transform.position, takeOffPos)< 0.5f)
+        {
+            transform.position = takeOffPos;
+            Debug.Log("도착");
+            ChangeState(eState.IDLE);
+        }
+    }
+
+    // UpdateLanding
+    public void UpdateLanding()
+    {
+        Vector3 takeOffPos = transform.position;
+        takeOffPos.y = 0.0f;
+        float downSpeed = 1.0f;
+        transform.position = Vector3.Slerp(transform.position, takeOffPos , downSpeed * Time.deltaTime);
+        if (Vector3.Distance(transform.position, takeOffPos) < 0.5f)
+        {
+            transform.position = takeOffPos;
+            Debug.Log("도착");
+            ChangeState(eState.IDLE);
+        }
+    }
 
     // MoveOffset
     float MoveOffset(float moveSpeed)
@@ -199,7 +261,7 @@ public class Character : MonoBehaviour
     public void Shot()
     {
         Quaternion fireRotation = transform.rotation;
-        _gun.Fire(fireRotation);
+        _gun.Fire(fireRotation,_target);
     }
 
     public float GetShotSpeed()
@@ -230,7 +292,7 @@ public class Character : MonoBehaviour
 
     virtual public void FindTarget()
     {
-        //_target = null;
+        _target = null;
     }
 
     public Character GetTarget()
@@ -240,8 +302,11 @@ public class Character : MonoBehaviour
 
     public void Look(Character target)
     {
-        target = _target;
-        transform.LookAt(target.transform);
+        Vector3 lookPos = target.transform.position;
+        lookPos.y = transform.position.y;
+        transform.LookAt(lookPos);
+        //transform.LookAt(target.transform);
+
     }
 
     public enum eGroupType
@@ -250,6 +315,11 @@ public class Character : MonoBehaviour
         ENEMY,
     }
 
+    // enemy
+    virtual public void UpdateAI()
+    {
+
+    }
 
     // GroupType
     protected eGroupType _groupType;
@@ -258,4 +328,6 @@ public class Character : MonoBehaviour
     {
         return _groupType;
     }
+
+    
 }
