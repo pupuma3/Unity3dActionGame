@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+    
     override protected void InitGroupIype()
     {
         _groupType = Character.eGroupType.ENEMY;
@@ -24,7 +25,8 @@ public class Enemy : Character
         base.InitState();
 
         State idleState = new EnemyIdleState();
-        State attackState = new EnemyAttackState();
+        State attackState = new AttackState();
+
 
         idleState.Init(this);
         attackState.Init(this);
@@ -45,9 +47,5 @@ public class Enemy : Character
 
     }
 
-    override public void UpdateAI()
-    {
-        _currentState.ChangeState(eState.ATTACK);
-    }
-
+    
 }

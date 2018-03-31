@@ -106,22 +106,7 @@ public class Character : MonoBehaviour
         _currentState.Start();
 
     }
-    virtual public void ArriveDestination()
-    {
-        ChangeState(Player.eState.IDLE);
-    }
-
-    protected Vector3 _targetPosition = Vector3.zero;
-
-    public Vector3 GetPosition()
-    {
-        return transform.position;
-    }
-
-    public Vector3 GetTargetPosition()
-    {
-        return _targetPosition;
-    }
+   
     //Input
     public enum eInputDirection
     {
@@ -225,6 +210,14 @@ public class Character : MonoBehaviour
     float MoveOffset(float moveSpeed)
     {
         return (moveSpeed * Time.deltaTime);
+    }
+
+    Vector3 _targetPos = Vector3.zero;
+
+
+    public Vector3 GetTargetPosition(Character target)
+    {
+        return target._targetPos;
     }
 
     // RUN
